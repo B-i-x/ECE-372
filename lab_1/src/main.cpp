@@ -15,8 +15,10 @@
 int main(){
 
   initLED();
+  initSwitch();
 
   while(1){
+    
     
     for (int i = 4; i <= 11; i++) {
       turnOnLED(i);
