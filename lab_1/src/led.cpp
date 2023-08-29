@@ -102,5 +102,18 @@ void turnOffLED(unsigned int led){
 
 // runLED which returns void and takes in an unsigned int parameter called led
 void runLED(unsigned int led){
+
+    int match = (-2 * led) + 15 + led;
+
+    if (led != 4) {
+        //turn off previous  set of leds
+        //if led is #4, then there is no previous to turn off so do nothing
+        turnOffLED(led - 1);
+        turnOffLED(match - 1);
+
+    }
+
+    turnOnLED(led);
+    turnOnLED(match);
   
 }

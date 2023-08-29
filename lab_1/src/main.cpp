@@ -21,9 +21,16 @@ int main(){
     
     
     for (int i = 4; i <= 11; i++) {
-      turnOnLED(i);
-      _delay_ms(LONG_DELAY);
-      turnOffLED(i);
+
+      runLED(i);
+
+      if(PINB & (1 << PINB6)){ // logic 1 true – turn off LED
+        _delay_ms(LONG_DELAY);
+      }
+      else { // logic 0 - turn on LED
+        _delay_ms(SHORT_DELAY);
+      }
+
     }
 
   }
