@@ -3,6 +3,7 @@
 // Date:           
 // Assignment:     Lab 1
 //----------------------------------------------------------------------//
+#include <Arduino.h>
 #include <avr/io.h>
 #include <util/delay.h>
 #include "led.h"
@@ -105,15 +106,27 @@ void runLED(unsigned int led){
 
     int match = (-2 * led) + 15 + led;
 
+    Serial.println("Turning on LEDS: " + String(led) + " and " + String(match));
+    turnOnLED(led);
+    turnOnLED(match);
+
     if (led != 4) {
         //turn off previous  set of leds
         //if led is #4, then there is no previous to turn off so do nothing
+        Serial.println("Turning off LEDS: " + String(led - 1) + " and " + String(match + 1));
+
         turnOffLED(led - 1);
-        turnOffLED(match - 1);
+        turnOffLED(match + 1);
 
     }
+    else {
+        turnOffLED(5);
+        turnOffLED(10);
+        /*
+        Since we are not going up to i = 11, just remember to turn off the the old lights that were on when the for loop in main resets
+        the old lights in the previous for loop are 5 and 10
+        */
 
-    turnOnLED(led);
-    turnOnLED(match);
+    }
   
 }
