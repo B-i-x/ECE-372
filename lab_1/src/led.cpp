@@ -1,6 +1,6 @@
-// Author:         
-// Net ID:         
-// Date:           
+// Author: Alex Romero-Lozano 
+// Net ID: aromerolozano
+// Date: 08/31/2023  
 // Assignment:     Lab 1
 //----------------------------------------------------------------------//
 #include <Arduino.h>
@@ -105,6 +105,17 @@ void turnOffLED(unsigned int led){
 void runLED(unsigned int led){
 
     int match = (-2 * led) + 15 + led;
+    //the other led that u need to turn on is just the 15 - input
+    /*
+     ON      OFF
+    4->11   5->10 (hardcoded)
+    5->10   4->11
+    6->9    5->10
+    7->8    6->9
+    8-x 8 is skipped in the for loop
+    9->6    8->7
+    10->5   9->6
+    */
 
     Serial.println("Turning on LEDS: " + String(led) + " and " + String(match));
     turnOnLED(led);

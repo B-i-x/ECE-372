@@ -1,6 +1,6 @@
-// Author:         
-// Net ID:         
-// Date:           
+// Author: Alex Romero-Lozano 
+// Net ID: aromerolozano
+// Date: 08/31/2023  
 // Assignment:     Lab 1
 //----------------------------------------------------------------------//
 
