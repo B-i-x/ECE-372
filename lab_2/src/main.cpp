@@ -55,7 +55,7 @@ int main(){
   */
 	while (1) {
 
-    Serial.println("Starting timer");
+    // Serial.println("Starting timer");
 
     delayMs(5000);
 
@@ -92,4 +92,23 @@ int main(){
 * the original rate, it goes back to the original rate.
 */
 // ISR for PCINT
-// if the PCINT was triggered for press
+ISR(PCINT0_vect){
+  // if the interrupt was triggered when state was waiting for press then we are going
+  // debounce the press action  so set pbstate to debounce press
+  if( pbstate == wait_press) {
+    pbstate = debounce_press;
+  }
+  else if (pbstate == wait_release) {
+    // else if interrupt was triggered when we were in wait_release, then we are going to 
+    // debounce the release action so set the pbstate to debounce release but first
+    // check the ledspeed and change it
+    if (led_speed == 2) {  // if the led_speed is fast then change it to slow
+      led_speed = 1;
+    }
+    else {
+      led_speed = 2; // else led_speed was slow so change it to fast
+    }
+    
+    pbstate = debounce_release;
+  }  
+}
