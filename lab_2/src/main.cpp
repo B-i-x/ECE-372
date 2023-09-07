@@ -17,6 +17,16 @@
 /*
  * Define a set of states that can be used in the state machine using an enum.
  */
+typedef enum stateType_enum {
+  wait_press, 
+  debounce_press, 
+  wait_release,
+  debounce_release
+  }
+  stateType;
+// define state variable volatile
+volatile stateType pbstate = wait_press;
+volatile int led_speed = 2;
 
 
 int main(){
@@ -27,7 +37,28 @@ int main(){
   */
 	while (1) {
 
-	}
+  switch (pbstate) {
+
+    case wait_press:
+      break;
+
+    case debounce_press:
+      delayMs(1);
+      pbstate = wait_release;
+      break;
+
+    case wait_release:
+      break;
+
+    case debounce_release:
+      delayMs(1);
+      pbstate = wait_press;
+      break;
+    }
+
+
+  }
+
   return 0;
 }
 
@@ -36,6 +67,5 @@ int main(){
 * change at twice the original rate. If the LEDs are already changing at twice
 * the original rate, it goes back to the original rate.
 */
-ISR(){
-  
-}
+// ISR for PCINT
+// if the PCINT was triggered for press
