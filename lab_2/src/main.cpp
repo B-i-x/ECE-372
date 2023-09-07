@@ -30,6 +30,8 @@ volatile int led_speed = 2;
 
 
 int main(){
+
+  initTimer1();
   
   /*
   * Implement a state machine in the while loop which achieves the assignment

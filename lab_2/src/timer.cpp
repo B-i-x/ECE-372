@@ -4,11 +4,16 @@
 
 #include <avr/io.h>
 #include "timer.h"
+/*
+set up our timer0 for mode of operation 
+use CTC mode
+WGM bits need to be specified
+for CTC mode 
+    WGM00 = 0, 
+    WGM01 = 1, 
+    WGM02 = 0
+*/
 
-// set up our timer0 for mode of operation 
-// use CTC mode
-// WGM bits need to be specified
-// for CTC mode WGM00 = 0, WGM01 = 1, WGM02 = 0
 
 //void initTIMER0(){
 //TCCR0A &= ~( 1 << WGM00);
