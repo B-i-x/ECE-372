@@ -24,7 +24,7 @@ for CTC mode
 // initialize mode of operation for Timer1 using CTC mode
 // WGM bits need configured
 
-void initTIMER1() {
+void initTimer1() {
     TCCR1A &= ~( (1 << WGM10) | ( 1<< WGM11));
     TCCR1B |= ( 1 << WGM12);
     TCCR1B &= ~ ( 1 << WGM13); 
@@ -33,7 +33,7 @@ void initTIMER1() {
 // function takes an int value called delay to delay the total time in milliseconds
 // this function is limited to delay = 1000 as the upper limit
 
-void delayMs (int delay) {
+void delayMs(int delay) {
 
     // set TCNT1 = 0
     TCNT1 = 0;
@@ -45,7 +45,7 @@ void delayMs (int delay) {
     // if we want to pass a value called delay then we can set OCR1A = 62 * delay
     // andthat should allow values in ms to be delayed by the right time up to 1000ms.
 
-    OCR1A = 62 * delay;
+    OCR1A = 254 * delay;
 
     // set output compare flag down by writing a logic 1
     TIFR1 |= (1 << OCF1A);

@@ -8,7 +8,7 @@
 #include "led.h"
 
 
-void initLED(){
+void initLEDs(){
     /* Initialize PA0, PA1, PA2, and PA3 to outputs
     */
 }

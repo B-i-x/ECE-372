@@ -10,10 +10,13 @@
 //----------------------------------------------------------------------//
 #include <Arduino.h>
 #include <avr/io.h>
+#include <avr/interrupt.h>
 #include "led.h"
 #include "switch.h"
 #include "timer.h"
 
+#define SHORT_DELAY 250
+#define LONG_DELAY 1000
 /*
  * Define a set of states that can be used in the state machine using an enum.
  */
@@ -26,12 +29,25 @@ typedef enum stateType_enum {
   stateType;
 // define state variable volatile
 volatile stateType pbstate = wait_press;
+
+
 volatile int led_speed = 2;
 
 
 int main(){
+  //serial for debugging
+  Serial.begin(9600);
 
-  initTimer1();
+  //initialize LEDS
+  initLEDs();  // set direction of LED pins
+  //initialize switch
+  initSwitch(); // set the switch for input and for pin change interrupts
+
+  // initialize timer1
+  initTimer1();  //initialize Timer 1 mode of operations using CTC mode
+
+  // enable global interrupts
+  sei();
   
   /*
   * Implement a state machine in the while loop which achieves the assignment
@@ -39,24 +55,30 @@ int main(){
   */
 	while (1) {
 
-  switch (pbstate) {
+    Serial.println("Starting timer");
 
-    case wait_press:
-      break;
+    delayMs(5000);
 
-    case debounce_press:
-      delayMs(1);
-      pbstate = wait_release;
-      break;
+    Serial.println("Ended Timer");
 
-    case wait_release:
-      break;
+    switch (pbstate) {
 
-    case debounce_release:
-      delayMs(1);
-      pbstate = wait_press;
-      break;
-    }
+      case wait_press:
+        break;
+
+      case debounce_press:
+        delayMs(1);
+        pbstate = wait_release;
+        break;
+
+      case wait_release:
+        break;
+
+      case debounce_release:
+        delayMs(1);
+        pbstate = wait_press;
+        break;
+      }
 
 
   }
