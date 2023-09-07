@@ -4,65 +4,52 @@
 
 #include <avr/io.h>
 #include "timer.h"
-/*
-set up our timer0 for mode of operation 
-use CTC mode
-WGM bits need to be specified
-for CTC mode 
-    WGM00 = 0, 
-    WGM01 = 1, 
-    WGM02 = 0
-*/
 
+// set up our timer for mode of operation 
+// use CTC mode
+// WGM bits need to be specified
+// for CTC mode WGM00 = 0, WGM01 = 1, WGM02 = 0
 
-//void initTIMER0(){
-//TCCR0A &= ~( 1 << WGM00);
-//TCCR0A |=  ( 1 << WGM01);
-//TCCR0B &= ~( 1 << WGM02);
-
-
-// initialize mode of operation for Timer1 using CTC mode
-// WGM bits need configured
-
-void initTimer1() {
-    TCCR1A &= ~( (1 << WGM10) | ( 1<< WGM11));
-    TCCR1B |= ( 1 << WGM12);
-    TCCR1B &= ~ ( 1 << WGM13); 
+void initTimer0(){
+TCCR0A &= ~( 1 << WGM00);
+TCCR0A |=  ( 1 << WGM01);
+TCCR0B &= ~( 1 << WGM02);
 }
-// function delayMS1 (delay)
-// function takes an int value called delay to delay the total time in milliseconds
-// this function is limited to delay = 1000 as the upper limit
 
-void delayMs(int delay) {
+// This function passes an int value called delay 
+//that will be used to specify how many milliseconds in the delay
+void delayMs(int delay){
 
-    // set TCNT1 = 0
-    TCNT1 = 0;
+    int count = 0;
 
-    // set outout compare value
-    // we used the formula OCR1A = [Td * fclk]/ PS
-    // using a PS = 256, Td = 1ms fclk = 16MHz.
-    // OCR1A = 62
-    // if we want to pass a value called delay then we can set OCR1A = 62 * delay
-    // andthat should allow values in ms to be delayed by the right time up to 1000ms.
+    // set up prescaler and output compare register value with formula
+    // OCR0A = (Td * Clk Freq )/ (Prescaler)
+    // Td = 1ms, clk freq = 16Mhz, Prescaler = 64
+    // OCR0A = 249;
+    //set the output compare register OCR0A to 249;
 
-    OCR1A = 254 * delay;
+    OCR0A = 249;
 
-    // set output compare flag down by writing a logic 1
-    TIFR1 |= (1 << OCF1A);
 
-    // turn on clock with the CS bits and start counting
-    // Use Prescaleer of 256 (62 counts is approximately 1 ms)
+    // TURN ON CLOCK , SET FREQ PRSCALER TO 64
+    TCCR0B  |= (1 << CS00) | (1 << CS01);
+    TCCR0B  &= ~ (1 << CS02);
+    // go into the millisecond loop and loop until count = delay
+    // after this while loop the delay time = delay * 1ms
+    while (count < delay){
+        // CLEAR THE OCF0A FLAG ()
+        // CLEAR THE OCF0A flag by writing a 1 bit
+        TIFR0 |= (1 << OCF0A);
 
-    TCCR1B |= (1 << CS12);
-    TCCR1B &= ~((1 << CS11)| (1 << CS10));
+        TCNT0 = 0;
+        // CLEAR THE COUNTER TO RESTART COUNTING UP TO 249
+        // WHILE THE FLAG OCF0A IS NOT RAISED DO NOTHING
+        while ( ! (TIFR0 & ( 1 << OCF0A)));
 
-    // poll the flag OCF1A bit to see when it is raised
-    // while the flag bit OCF1A is down , do nothing
-    while (( TIFR1 & ( 1 << OCF1A)) == 0) ;
+        count++;
+    }
 
-    // exit out we have our delay required
-    // turn off clock
-    TCCR1B &= ~( ( 1 << CS12) | ( 1 << CS11) | (1 << CS10));
-
+    // turn clock off
+    TCCR0B  &= ~ ((1 << CS00) | (1 << CS01) | ( 1 << CS02));
 
 }

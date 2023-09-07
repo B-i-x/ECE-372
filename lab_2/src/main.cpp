@@ -44,7 +44,7 @@ int main(){
   initSwitch(); // set the switch for input and for pin change interrupts
 
   // initialize timer1
-  initTimer1();  //initialize Timer 1 mode of operations using CTC mode
+  initTimer0();  //initialize Timer 1 mode of operations using CTC mode
 
   // enable global interrupts
   sei();
@@ -80,7 +80,7 @@ int main(){
         break;
       }
 
-
+    Serial.flush();
   }
 
   return 0;
