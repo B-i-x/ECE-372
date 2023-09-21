@@ -11,9 +11,18 @@
 // for CTC mode WGM00 = 0, WGM01 = 1, WGM02 = 0
 
 void initTimer0(){
-TCCR0A &= ~( 1 << WGM00);
-TCCR0A |=  ( 1 << WGM01);
-TCCR0B &= ~( 1 << WGM02);
+    // intialize Timer0 for CTC mode of operation and interrupts
+    // WGM00 = 0, WGM01 = 1, WGM02 = 0 for CTC mode
+    TCCR0A &= ~ (1 << WGM00);
+    TCCR0A |=  (1 << WGM01);
+    TCCR0B &= ~(1 << WGM02); 
+    // USE #counts = (td* fCPU)/PS  = (1ms*16MHz)/64 -1 = 249
+    OCR0A= 249;
+    // enable TIMER0 interrupt for Output Compare OCR0A
+    TIMSK0 |= (1 << OCIE0A); 
+    // turn on the clock by setting the prescaler bits to 64
+    TCCR0B |= (1 << CS00) | (1 << CS01);
+    TCCR0B &= ~ (1 << CS02);
 }
 
 // This function passes an int value called delay 

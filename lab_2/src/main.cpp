@@ -27,6 +27,7 @@ typedef enum stateType_enum {
   debounce_release
   }
   stateType;
+  
 // define state variable volatile
 volatile stateType pbstate = wait_press;
 
@@ -53,28 +54,44 @@ int main(){
   * Implement a state machine in the while loop which achieves the assignment
   * requirements.
   */
+
+  Serial.println("Entering loop");
+
 	while (1) {
 
-    // Serial.println("Starting timer");
+    _delay_ms(1000);
 
-    delayMs(5000);
+    Serial.println("Start cycle");
+
+    delayMs(1000);
 
     Serial.println("Ended Timer");
 
     switch (pbstate) {
 
       case wait_press:
+        Serial.println("In wait_press state");
+
         break;
 
       case debounce_press:
+
+        Serial.println("In debounce_press state");
+
         delayMs(1);
         pbstate = wait_release;
         break;
 
       case wait_release:
+
+        Serial.println("In wait_release state");
+
         break;
 
       case debounce_release:
+
+        Serial.println("In debounce_release state");
+
         delayMs(1);
         pbstate = wait_press;
         break;
