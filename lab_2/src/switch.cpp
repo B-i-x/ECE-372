@@ -8,7 +8,7 @@
 /*
  * Initializes pull-up resistor on PB3 and sets it into input mode
  */
-void initSwitch(){
+void initSwitchPB3(){
     //set the data direction register to input
   // i'll choose header pin 12 (bit location PB6)
 
@@ -17,6 +17,6 @@ void initSwitch(){
 
   // enable the group pin change interrupts PCINTs 0 through 7
    PCICR |= (1 << PCIE0);
-  // enable the local PCINT 6 corresponding to development board header pin 12
+  // enable the local PCINT 3 corresponding to development board header pin 12
   PCMSK0 |= (1 << PCINT3);
 }

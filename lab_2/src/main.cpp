@@ -36,63 +36,58 @@ volatile int led_speed = 2;
 
 
 int main(){
+  
   //serial for debugging
   Serial.begin(9600);
 
   //initialize LEDS
-  initLEDs();  // set direction of LED pins
+  // initLED();  // set direction of LED pins
   //initialize switch
-  initSwitch(); // set the switch for input and for pin change interrupts
+  initSwitchPB3(); // set the switch for input and for pin change interrupts
 
   // initialize timer1
   initTimer0();  //initialize Timer 1 mode of operations using CTC mode
 
+ 
   // enable global interrupts
   sei();
-  
   /*
   * Implement a state machine in the while loop which achieves the assignment
   * requirements.
   */
 
-  Serial.println("Entering loop");
-
 	while (1) {
-
-    _delay_ms(1000);
 
     Serial.println("Start cycle");
 
     delayMs(1000);
 
-    Serial.println("Ended Timer");
-
     switch (pbstate) {
 
       case wait_press:
         Serial.println("In wait_press state");
+        delayMs(500);
 
         break;
 
       case debounce_press:
-
         Serial.println("In debounce_press state");
+        delayMs(500);
 
-        delayMs(1);
         pbstate = wait_release;
         break;
 
       case wait_release:
-
         Serial.println("In wait_release state");
+        delayMs(500);
 
         break;
 
       case debounce_release:
-
         Serial.println("In debounce_release state");
+        delayMs(500);
 
-        delayMs(1);
+       
         pbstate = wait_press;
         break;
       }

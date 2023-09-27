@@ -8,7 +8,7 @@
 #include "led.h"
 
 
-void initLEDs(){
+void initLED(){
     /* Initialize PA0, PA1, PA2, and PA3 to outputs
     */
 }
@@ -20,4 +20,5 @@ void turnOnLEDWithChar(unsigned char num){
     * in binary by four LEDs. You must effectively assign the lowest four bits of
     * "num" to the appropriate bits of PORTA.
     */
+   PORTB ^= (1 <<PORTB4) | (1 << PORTB5);
 }
