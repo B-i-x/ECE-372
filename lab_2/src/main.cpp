@@ -41,7 +41,7 @@ int main(){
   Serial.begin(9600);
 
   //initialize LEDS
-  // initLED();  // set direction of LED pins
+  initLED();  // set direction of LED pins
   //initialize switch
   initSwitchPB3(); // set the switch for input and for pin change interrupts
 
