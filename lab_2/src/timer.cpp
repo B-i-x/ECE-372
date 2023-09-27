@@ -1,5 +1,6 @@
-// this is the timer.cpp file for our own timer functions
-// ECE 372A  9-17-20
+// Author: Alejandro Romero-Lozano        
+// Net ID: aromerolozano
+// Date: 9-28-2023 
 
 
 #include <avr/io.h>

@@ -1,3 +1,6 @@
+// Author: Alejandro Romero-Lozano        
+// Net ID: aromerolozano
+// Date: 9-28-2023 
 // Description: This file implements turnOnLED and initLED to control
 // the LEDs.
 //----------------------------------------------------------------------//

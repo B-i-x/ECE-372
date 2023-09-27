@@ -6,11 +6,13 @@
 #include <avr/io.h>
 
 /*
+// Author: Alejandro Romero-Lozano        
+// Net ID: aromerolozano
+// Date: 9-28-2023  
  * Initializes pull-up resistor on PB3 and sets it into input mode
  */
 void initSwitchPB3(){
     //set the data direction register to input
-  // i'll choose header pin 12 (bit location PB6)
 
   DDRB &= ~(1<<DDB3); // set direction for input
   PORTB |= (1 << PORTB3);  // enable the pullup resistor for stable input

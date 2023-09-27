@@ -1,6 +1,6 @@
-// Author:         
-// Net ID:         
-// Date:          
+// Author: Alejandro Romero-Lozano        
+// Net ID: aromerolozano
+// Date: 9-28-2023   
 // Assignment:     Lab 2
 //
 // Description: This file contains a programmatic overall description of the
@@ -15,8 +15,8 @@
 #include "switch.h"
 #include "timer.h"
 
-#define SHORT_DELAY 250
-#define LONG_DELAY 1000
+#define SHORT_DELAY 100
+#define LONG_DELAY 200
 /*
  * Define a set of states that can be used in the state machine using an enum.
  */
@@ -48,7 +48,7 @@ int main(){
   // initialize timer1
   initTimer0();  //initialize Timer 1 mode of operations using CTC mode
 
- 
+  int led_count = 0;
   // enable global interrupts
   sei();
   /*
@@ -58,41 +58,45 @@ int main(){
 
 	while (1) {
 
-    Serial.println("Start cycle");
+    if (led_speed == 2) {
+      delayMs(LONG_DELAY);
+    }
+    else {
+      delayMs(SHORT_DELAY);
+    }
 
-    delayMs(1000);
+    turnOnLEDWithChar(led_count);
+
 
     switch (pbstate) {
 
       case wait_press:
-        Serial.println("In wait_press state");
-        delayMs(500);
-
+        // Serial.println("In wait_press state");
+        delayMs(1);
         break;
 
       case debounce_press:
-        Serial.println("In debounce_press state");
-        delayMs(500);
-
+        // Serial.println("In debounce_press state");
+        delayMs(1);
         pbstate = wait_release;
         break;
 
       case wait_release:
-        Serial.println("In wait_release state");
-        delayMs(500);
-
+        // Serial.println("In wait_release state");
+        delayMs(1);
         break;
 
-      case debounce_release:
-        Serial.println("In debounce_release state");
-        delayMs(500);
 
-       
+      case debounce_release:
+        // Serial.println("In debounce_release state");
+        delayMs(1);
         pbstate = wait_press;
         break;
       }
 
-    Serial.flush();
+    // Serial.flush();
+
+    led_count++;
   }
 
   return 0;
