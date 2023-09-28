@@ -13,7 +13,7 @@
 void initLED(){
     /* Initialize PA0, PA1, PA2, and PA3 to outputs
     */
-   DDRA |= (1<<DDA0) | (1<<DDA1) | (1<<DDA3) | (1<<DDA3);
+   DDRA |= (1<<DDA0) | (1<<DDA1) | (1<<DDA2) | (1<<DDA3);
 }
 
 
