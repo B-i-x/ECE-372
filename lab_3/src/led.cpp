@@ -11,7 +11,7 @@
 */
 void initLED(){
 
-    DDRA |= (1<<DDA0) | (1<<DDA1) | (1<<DDA2) | (1<<DDA3);
+    DDRD |= (1<<DDD0) | (1<<DDD1) | (1<<DDD2) | (1<<DDD3);
 }
 
 /* This must be one line of code.
@@ -21,6 +21,6 @@ void initLED(){
 */
 void turnOnLEDWithChar(unsigned char num){
 
-    PORTA = (PORTA & 0xF0) | (num & 0x0F);
+    PORTD = (PORTD & 0xF0) | (num & 0x0F);
   
 }

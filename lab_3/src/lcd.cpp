@@ -11,6 +11,10 @@
  * Initializes all pins related to the LCD to be outputs
  */
 void initLCDPins(){
+  
+  DDRA |= (1<<DDA0) | (1<<DDA1) | (1<<DDA2) | (1<<DDA3);
+
+  DDRB |= (1<<DDB4) | (1<<DDB6);
 
 }
 
@@ -26,7 +30,8 @@ void initLCDPins(){
  */
 void fourBitCommandWithDelay(unsigned char data, unsigned int delay){
 
-  PORTA = data;
+  PORTB &= ~(1 << PORTB6);
+  PORTA = (PORTA & 0xF0) | (data & 0x0F);
 }
 
 
@@ -89,7 +94,7 @@ void moveCursor(unsigned char x, unsigned char y){
  */
 void initLCDProcedure(){
   // Delay 15 milliseconds
-
+  delayMs(15);
   // Write 0b0011 to DB[7:4] and delay 4100 microseconds
   
   // Write 0b0011 to DB[7:4] and delay 100 microseconds
