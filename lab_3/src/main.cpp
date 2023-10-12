@@ -58,15 +58,22 @@ int main(){
   moveCursor(1, 0);  // moves the cursor to 1,0 position
   writeString("Fast");
 
+  
 
 	while (1) {
     
 
     if (led_speed == 2) {
       delayMs(LONG_DELAY);
+
+      moveCursor(1, 0);  // moves the cursor to 1,0 position
+      writeString("Slow");
+
     }
     else {
       delayMs(SHORT_DELAY);
+      moveCursor(1, 0);  // moves the cursor to 1,0 position
+      writeString("Fast");
     }
 
     turnOnLEDWithChar(led_count);
@@ -75,24 +82,24 @@ int main(){
     switch (pbstate) {
 
       case wait_press:
-        Serial.println("In wait_press state");
+        // Serial.println("In wait_press state");
         delayMs(1);
         break;
 
       case debounce_press:
-        Serial.println("In debounce_press state");
+        // Serial.println("In debounce_press state");
         delayMs(1);
         pbstate = wait_release;
         break;
 
       case wait_release:
-        Serial.println("In wait_release state");
+        // Serial.println("In wait_release state");
         delayMs(1);
         break;
 
 
       case debounce_release:
-        Serial.println("In debounce_release state");
+        // Serial.println("In debounce_release state");
         delayMs(1);
         pbstate = wait_press;
         break;

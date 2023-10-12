@@ -15,6 +15,8 @@ void initLCDPins(){
   DDRA |= (1<<DDA0) | (1<<DDA1) | (1<<DDA2) | (1<<DDA3);
 
   DDRB |= (1<<DDB4) | (1<<DDB6);
+  //port b4 is header pin 10 and that is enable pin
+  //port b6 is header pin 12 and that is RS pin
 
 }
 
@@ -30,8 +32,17 @@ void initLCDPins(){
  */
 void fourBitCommandWithDelay(unsigned char data, unsigned int delay){
 
-  PORTB &= ~(1 << PORTB6);
   PORTA = (PORTA & 0xF0) | (data & 0x0F);
+
+  PORTB &= ~(1 << PORTB6); //setting rs low
+
+  PORTB |= (1 << PORTB4); //setting enable pin high
+
+  delayUs(1);
+
+  PORTB &= ~(1 << PORTB4); //setting enable pin low
+
+  delayUs(delay);
 }
 
 
@@ -48,7 +59,25 @@ void fourBitCommandWithDelay(unsigned char data, unsigned int delay){
  * 6. delay the provided number in MICROseconds.
  */
 void eightBitCommandWithDelay(unsigned char command, unsigned int delay){
- 
+
+  PORTA = (command >> 4) & 0x0F; //top most bits of command
+
+  PORTB &= ~(1 << PORTB6); //setting rs low
+
+  PORTB |= (1 << PORTB4); //setting enable pin high
+
+  PORTB &= ~(1 << PORTB4); //setting enable pin low
+
+  PORTA = (PORTA & 0xF0) | (command & 0x0F); //bottom most bits of command
+
+  PORTB |= (1 << PORTB4); //setting enable pin high
+
+  delayUs(1);
+
+  PORTB &= ~(1 << PORTB4); //setting enable pin low
+
+  delayUs(delay);
+
 }
 
 
@@ -62,7 +91,24 @@ void eightBitCommandWithDelay(unsigned char command, unsigned int delay){
  * 6. delay is always 46 MICROseconds for a character write
  */
 void writeCharacter(unsigned char character){
- 
+  PORTA = (character >> 4) & 0x0F; //top most bits of command
+
+  PORTB |= (1 << PORTB6); //setting rs high
+
+  PORTB |= (1 << PORTB4); //setting enable pin high
+
+  PORTB &= ~(1 << PORTB4); //setting enable pin low
+
+  PORTA = (PORTA & 0xF0) | (character & 0x0F); //bottom most bits of command
+
+  PORTB |= (1 << PORTB4); //setting enable pin high
+
+  delayUs(1);
+
+  PORTB &= ~(1 << PORTB4); //setting enable pin low
+
+  delayUs(43);
+
 }
 
 
@@ -73,8 +119,11 @@ void writeCharacter(unsigned char character){
  * remember that a c string always ends with the '\0' character and
  * that this should just call writeCharacter multiple times.
  */
-void writeString(const char *string){
-
+void writeString(const char *str){
+  while(*str != '\0'){
+    writeCharacter(*str);
+    str++;
+  }
 }
 
 
@@ -84,7 +133,11 @@ void writeString(const char *string){
  * This can be done using the eightBitCommandWithDelay with correct arguments
  */
 void moveCursor(unsigned char x, unsigned char y){
-	
+
+  unsigned char new_address = (0x80) | (x<<6) | (y) ;
+
+  eightBitCommandWithDelay(new_address, 53);
+
 }
 
 
@@ -93,30 +146,39 @@ void moveCursor(unsigned char x, unsigned char y){
  * functions working.
  */
 void initLCDProcedure(){
-  // Delay 15 milliseconds
-  delayMs(15);
+  // Delay 50 milliseconds
+  delayMs(50);
   // Write 0b0011 to DB[7:4] and delay 4100 microseconds
-  
+  PORTA = (PORTA & 0xF0) | (3 & 0x0F);
+  delayUs(4100);
   // Write 0b0011 to DB[7:4] and delay 100 microseconds
-
+  PORTA = (PORTA & 0xF0) | (3 & 0x0F);
+  delayUs(100);
   // The data sheet does not make this clear, but at this point you are issuing
   // commands in two sets of four bits. You must delay after each command
   // (which is the second set of four bits) an amount specified on page 3 of
   // the data sheet.
   // write 0b0011 to DB[7:4] and 100us delay
-
+  PORTA = (PORTA & 0xF0) | (3 & 0x0F);
+  delayUs(100);
   // write 0b0010 to DB[7:4] and 100us delay.
-
+  PORTA = (PORTA & 0xF0) | (2 & 0x0F);
+  delayUs(100);
   // Function set in the command table with 53us delay
+  eightBitCommandWithDelay((unsigned char)(0x28), 53);
 
   // Display off in the command table with 53us delay
+  eightBitCommandWithDelay((unsigned char)(0x08), 53);
 
   // Clear display in the command table. Remember the delay is longer!!!
+  eightBitCommandWithDelay((unsigned char)(0x01), 3000);
 
   // Entry Mode Set in the command table.
+  eightBitCommandWithDelay((unsigned char)(0x06), 3000);
 
   // Display ON/OFF Control in the command table. (Yes, this is not specified),
   // in the data sheet, but you have to do it to get this to work. Yay datasheets!)
+  eightBitCommandWithDelay((unsigned char)(0x0C), 3000);
 
 }
 
