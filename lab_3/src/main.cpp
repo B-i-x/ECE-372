@@ -67,7 +67,7 @@ int main(){
       delayMs(LONG_DELAY);
 
       moveCursor(1, 0);  // moves the cursor to 1,0 position
-      writeString("Slow");
+      writeString("Slow ");
 
     }
     else {
