@@ -1,6 +1,6 @@
-// Author: 
-// Net ID: 
-// Date: 
+// Author: Alejandro Romero-Lozano
+// Net ID: aromerolozano
+// Date: 10/13/2023
 // Assignment: Lab 3
 //----------------------------------------------------------------------//
 #include "lcd.h"

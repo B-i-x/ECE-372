@@ -1,7 +1,7 @@
-// Author:
-// Net ID:
-// Date:
-// Assignment:     Lab 3
+// Author: Alejandro Romero-Lozano
+// Net ID: aromerolozano
+// Date: 10/13/2023
+// Assignment:  Lab 3
 //
 // Description: This file contains a programmatic overall description of the
 // program. It should never contain assignments to special function registers
