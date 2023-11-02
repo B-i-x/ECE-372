@@ -66,7 +66,7 @@ void WriteToDisplay(int input) {
             break;
 
         default:
-            controlSignal = 0b1111110;
+            controlSignal = 0b0000000;
             break;
     }
 
