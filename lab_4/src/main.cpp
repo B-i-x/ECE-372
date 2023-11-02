@@ -2,6 +2,7 @@
 #include <SevenSegmentDisplay.h>
 #include <avr/io.h>
 #include <avr/interrupt.h>
+
 #include "switch.h"
 #include "timer.h"
 #include "pwm.h"
@@ -22,17 +23,18 @@ volatile unsigned int flip_speed = 0; // global variable to flip the toggle blin
     
 
 int main(){
-  //Serial.begin(9600);
-  //sei();
-  //initDisplay();
+  Serial.begin(9600);
+  sei();
+  initDisplay();
 
-  //initTimer0();
-  //initTimer1();
+  initTimer0();
+  initTimer1();
 
-  //initSwitchPD0();
+  initSwitchPD0();
 
   initPWMTimer3();
-  //initADC7();
+  initPWMTimer4();
+  initADC7();
   unsigned int result = 0;
   float voltage = 0;
   while(1){
@@ -43,14 +45,14 @@ int main(){
       // Serial.println(voltage,2);
 
     // changeDutyCycle(voltage);
-    float dutyCycle = analyzeADC(voltage);
+    analyzeADC(voltage);
 
     // delayMs(300);
-    Serial.print(" calculated dutycyle is:");
-    Serial.println(dutyCycle, 2);
+    // Serial.print(" calculated dutycyle is:");
+    // Serial.println(dutyCycle, 2);
 
-    changeDutyCycle(dutyCycle);
-    /*
+    // changeDutyCycle(dutyCycle);
+    
     //state machine for push button
     switch (my_button_state){
       case wait_press: // Home state
@@ -62,12 +64,12 @@ int main(){
         break;
       case debounce_r:
         delayMs(DEBOUNCE_TIME); //wait for button to be released 1ms before changing state
-        
+        changeDutyCycle(0, 0);
         for (int i = 9; i > -1; i--) {
         WriteToDisplay(i);
         delayUs(1);
         }
-
+        
         WriteToDisplay(10);
 
         my_button_state = wait_press; //go to wait_press
@@ -76,7 +78,7 @@ int main(){
       default:
         break;
     }	
-    */
+    
   }
   
   return 0;
