@@ -28,11 +28,12 @@ DDRB |= (1 << DDB5);
 // WGM11 =1
 // WGM12 = 1
 // WGM13 = 0
-TCCR3A |=  (1 << WGM30) | (1 << WGM31);
+TCCR3A |=  (1 << WGM31);
 
 TCCR3B |= (1 << WGM32);
-TCCR3B &= ~(1 << WGM33); 
-
+TCCR3B |= (1 << WGM33);
+TCCR3A &= ~(1 << WGM30); 
+ICR3 = 1024;
 // PWM frequency calculation for FAST PWM mode on page 148 of datasheet
   //frequency of PWM = (F_clk)/((Prescaler)* (1 +TOP))
   // frequency of PWM = 16Mhz
@@ -47,8 +48,8 @@ TCCR3B &= ~(1 << WGM33);
 //CS10 =1
 //CS11 =0
 //CS12 =0
-TCCR3B |= (1 << CS30);
-TCCR3B &= ~((1 << CS31)  | (1 << CS32));
+TCCR3B |= (1 << CS31);
+TCCR3B &= ~((1 << CS30)  | (1 << CS32));
 
 
 // the last thing is to set the duty cycle.     
@@ -62,7 +63,7 @@ OCR3A =  614;
 }
 
 void changeDutyCycle(float dutycycle){
-  OCR3A = int(dutycycle * (1 + 1024));
+  OCR3A = int(dutycycle * (1024));
 
 }
 

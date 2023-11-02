@@ -22,18 +22,17 @@ volatile unsigned int flip_speed = 0; // global variable to flip the toggle blin
     
 
 int main(){
-  Serial.begin(9600);
-  sei();
-  initDisplay();
+  //Serial.begin(9600);
+  //sei();
+  //initDisplay();
 
-  initTimer0();
-  initTimer1();
+  //initTimer0();
+  //initTimer1();
 
-  initSwitchPD0();
+  //initSwitchPD0();
 
   initPWMTimer3();
-  initADC7();
-
+  //initADC7();
   unsigned int result = 0;
   float voltage = 0;
   while(1){
@@ -50,8 +49,8 @@ int main(){
     Serial.print(" calculated dutycyle is:");
     Serial.println(dutyCycle, 2);
 
-    // changeDutyCycle(dutyCycle);
-  
+    changeDutyCycle(dutyCycle);
+    /*
     //state machine for push button
     switch (my_button_state){
       case wait_press: // Home state
@@ -77,6 +76,7 @@ int main(){
       default:
         break;
     }	
+    */
   }
   
   return 0;
