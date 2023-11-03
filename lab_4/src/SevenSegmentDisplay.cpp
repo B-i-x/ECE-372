@@ -7,19 +7,35 @@
 */
 void initDisplay(){
 
-    DDRC |= (1<<DDC0) | (1<<DDC1) | (1<<DDC2) | (1<<DDC3) | (1<<DDC4) | (1<<DDC5) | (1<<DDC6);
+    DDRB |= (1 << DDB4); //this is SER
+
+    DDRH |= ((1 << DDH5) | (1 << DDH6));
+    //        RCLK          SRCLK
+    //RCLK
+    //When this pin is pulled HIGH, the contents of the Shift Register are copied into the Storage/Latch Register, 
+    //which eventually appears at the output. So, the latch pin can be seen as the last step before we see our results at the output.
+    //setting latch low
+    PORTH &= ~(1 << PORTH5);
+
+    //
+    //SRCLK
+    //is the clock for the shift-register and is positive-edge triggered. 
+    //This means that the bits are pushed in on the rising edge of the clock.
+    //setting clock low
+    PORTH &= ~(1 << PORTH6);
 }
 
 void WriteToDisplay(int input) {
     /*
-    num = bit_index AND portC index
-    A = 6 (MSB)
-    B = 5
-    C = 4
-    D = 3
-    E = 2
-    F = 1
-    G = 0 (LSB)
+    //0b0000000;
+    //msb     lsb
+    A = (msb)
+    B = 
+    C = 
+    D = 
+    E = 
+    F = 
+    G = (lsb)
     */
     
     int controlSignal = 0b0000000;
@@ -69,7 +85,7 @@ void WriteToDisplay(int input) {
             controlSignal = 0b0000000;
             break;
     }
-
+    
     //iterate through every bit in the control signal and write to that port
     for (int i = 0; i < 7; i++) {
         int PortToggle = (controlSignal >> i) & 1;
@@ -84,17 +100,36 @@ void WriteToDisplay(int input) {
         
         // Serial.print("\n");
 
-        numToPort(i, (bool)PortToggle);
+        SER((bool)PortToggle);
     }
+
+    
+
 }
 
-void numToPort(int portNum, bool toggle) {
-
+void SER(bool toggle) {
+    //write to SER
     if (toggle) {
-        PORTC |= (1 << portNum);
+        PORTB |= (1 << PORTB4);
     }
     else {
-        PORTC &= ~(1 << portNum);
+        PORTB &= ~(1 << PORTB4);
     }
+
+    //open latch
+    PORTH |= (1 << PORTH5);
+
+    //make clock go high
+    PORTH |= (1 << PORTH6);
+    
+
+    
+
+    //make clock go low
+    PORTH &= ~(1 << PORTH6);
+
+    //close latch
+    PORTH &= ~(1 << PORTH5);
+
 
 }
