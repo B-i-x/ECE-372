@@ -6,7 +6,7 @@
 // Date: 11/7
 // Assignment: lab 4
 //
-// Description: initialize and write to a 7 segment display using a shift register
+// Description: main
 //----------------------------------------------------------------------//
 #include <Arduino.h>
 #include <avr/io.h>
