@@ -1,18 +1,15 @@
-
-#include <avr/io.h>
-
 #include "adc.h"
-
-//Pin A0 (Development 22)
-// Author: Dale Hetherington
-// Net ID:
-// Date:
-// Assignment:
+// Pin A0 (Development 22)
+// Author: 
+//  Alex Romero
+//  Victor Oviedo
+//  Mason Marrero
+//  Omar Ramos
+// Date: 11/7
+// Assignment: lab 4
 //
-// Description:  Use ADC7 for reading in analog voltage value
+// Description:  Use ADC0 for reading in analog voltage value
 //----------------------------------------------------------------------//
-
-#include "adc.h"
 #include <avr/io.h>
 
 void initADC0(){

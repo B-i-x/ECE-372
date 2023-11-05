@@ -1,5 +1,15 @@
-
 #include "switch.h"
+// Author: 
+//  Alex Romero
+//  Victor Oviedo
+//  Mason Marrero
+//  Omar Ramos
+// Date: 11/7
+// Assignment: lab 4
+//
+// Description: use PD0 as a button, an INT button
+//----------------------------------------------------------------------//
+
 #include <avr/io.h>
 
 /*

@@ -1,10 +1,17 @@
+#include "SevenSegmentDisplay.h"
+// Author: 
+//  Alex Romero
+//  Victor Oviedo
+//  Mason Marrero
+//  Omar Ramos
+// Date: 11/7
+// Assignment: lab 4
+//
+// Description: initialize and write to a 7 segment display using a shift register
+//----------------------------------------------------------------------//
 #include <avr/io.h>
-#include <Arduino.h>
 
-#include <SevenSegmentDisplay.h>
 
-/* Initialize PORTC
-*/
 void initDisplay(){
 
     DDRB |= (1 << DDB4); //this is SER
@@ -123,13 +130,11 @@ void SER(bool toggle) {
     PORTH |= (1 << PORTH6);
     
 
-    
-
     //make clock go low
     PORTH &= ~(1 << PORTH6);
 
     //close latch
     PORTH &= ~(1 << PORTH5);
 
-
+    //im moving both the latch and the clock at the same time here but I know you can also trigger the clock 7 times and then trigger the latch 7 times but in this case it doesnt matter
 }

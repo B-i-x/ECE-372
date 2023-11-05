@@ -1,11 +1,21 @@
+// Author: 
+//  Alex Romero
+//  Victor Oviedo
+//  Mason Marrero
+//  Omar Ramos
+// Date: 11/7
+// Assignment: lab 4
+//
+// Description: initialize and write to a 7 segment display using a shift register
+//----------------------------------------------------------------------//
 #include <Arduino.h>
 #include <avr/io.h>
 
-#include <SevenSegmentDisplay.h>
-#include <pwm.h>
-#include <adc.h>
-#include <timer.h>
-#include <switch.h>
+#include "SevenSegmentDisplay.h"
+#include "pwm.h"
+#include "adc.h"
+#include "timer.h"
+#include "switch.h"
 
 
 #define DEBOUNCE_TIME 1 //Debounce time is 1ms
@@ -26,7 +36,7 @@ volatile button_state my_button_state = wait_press;
 int main(){
   sei(); //enable intterupts
 
-  Serial.begin(9600);
+  // Serial.begin(9600);
   
   initDisplay();
   WriteToDisplay(-1);
@@ -43,7 +53,6 @@ int main(){
   initSwitchPD0(); //button
   while (1) {
 
-    Serial.println(PORTD0);
     switch (my_button_state){
 
       case wait_press: // Home state
@@ -53,11 +62,9 @@ int main(){
       case debounce_p:
         delayMs(DEBOUNCE_TIME); //wait for button to be pushed 1ms before changing state
         my_button_state = wait_release; //go to wait_release
-        Serial.println("debounce");
         break;
 
       case wait_release:
-        Serial.println("wait release");
         break;
 
       case debounce_r:
@@ -81,10 +88,10 @@ int main(){
     }	
   }
   
-
-  
   return 0;
 }
+
+
 
 ISR(INT0_vect){ // Assign INT0_vect to work
   if (my_button_state == wait_press){ //when the pin change is detected, if in wait_press go to debounce_p

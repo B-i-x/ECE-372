@@ -1,7 +1,15 @@
 #include "pwm.h"
-
+// Author: 
+//  Alex Romero
+//  Victor Oviedo
+//  Mason Marrero
+//  Omar Ramos
+// Date: 11/7
+// Assignment: lab 4
+//
+// Description: get two PWM timers and function to analyze ADC
+//----------------------------------------------------------------------//
 #include <avr/io.h>
-#include <Arduino.h>
 
 
 // function that produces an output PWM signal with a variable frequency and duty cycle. For this example
