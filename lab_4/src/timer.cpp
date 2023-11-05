@@ -9,9 +9,9 @@ void initTimer1(){
     TCCR1B &= ~(1 << WGM13);
     OCR1A = 15625; // set comparator value for CTC mode
 }
-/* This delays the program an amount of microseconds specified by unsigned int delay.
+/* This delays the program an amount of Seconds specified by unsigned int delay.
 */
-void delayUs(unsigned int delay){
+void delayS(unsigned int delay){
     unsigned int counter = 0;
     // turn on the clock by setting the prescaler bits to 8
     TCCR1B &= ~(1 << CS01);

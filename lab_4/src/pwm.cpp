@@ -42,23 +42,23 @@ void initPWMTimer3()  {
   // TOP value = 0x3FF = 1023 
   // PWM frequency from calculation = 15.625 kHz
 
-ICR3 = 1023;
+  ICR3 = 1023;
 
-// set prescalar CSBits to prescaler of 1
-//CS10 =1
-//CS11 =0
-//CS12 =0
-TCCR3B |= (1 << CS31);
-TCCR3B &= ~((1 << CS30)  | (1 << CS32));
+  // set prescalar CSBits to prescaler of 1
+  //CS10 =1
+  //CS11 =0
+  //CS12 =0
+  TCCR3B |= (1 << CS31);
+  TCCR3B &= ~((1 << CS30)  | (1 << CS32));
 
 
-// the last thing is to set the duty cycle.     
-// duty cycle is set by dividing output compare OCR1A value by 1 + TOP value
-// the top value is (1 + ICR1) = 1024
-//  calculate OCR1A value => OCR1A = duty cycle(fractional number) * (1 + TOP) 
-// we want a duty cycle = 60%
-// OCR1A = 0.60 * 1024
- OCR3A =  512;
+  // the last thing is to set the duty cycle.     
+  // duty cycle is set by dividing output compare OCR1A value by 1 + TOP value
+  // the top value is (1 + ICR1) = 1024
+  //  calculate OCR1A value => OCR1A = duty cycle(fractional number) * (1 + TOP) 
+  // we want a duty cycle = 60%
+  // OCR1A = 0.60 * 1024
+  OCR3A =  0;
 }
 
 void initPWMTimer4()  {
@@ -95,11 +95,11 @@ void initPWMTimer4()  {
   TCCR4B |= (1 << CS41);
   TCCR4B &= ~((1 << CS40)  | (1 << CS42));
 
-  OCR4A = 512;
+  OCR4A = 1023;
 
 }
 
-void changeDutyCycle(float dutycycle1, float dutycycle2){
+void changeDutyCycle(double dutycycle1, double dutycycle2){
   OCR3A = int(dutycycle1 * (1024));
 
   OCR4A = int(dutycycle2 * (1024));
@@ -110,62 +110,21 @@ void analyzeADC() {
   while(! ((1 << 4) & ADCSRA)) {//waiting for ADC to be ready
   }
 
-  unsigned int adcResult = ADCL;
-  adcResult += ((unsigned int) ADCH) << 8;
+  unsigned int adcResult = ADCL; //getting adc result p1
+  adcResult += ((unsigned int) ADCH) << 8;  //getting adc result p2
 
-  double percentage = adcResult / 1024.0;
-  double dc = 0;
+  double percentage = adcResult / 1024.0; //getting the adc percentage
+  double dc1, dc2;
+
   if (percentage < 0.5) {
-    dc = 1 - (percentage * 2);
-    changeDutyCycle(0.0, dc);
+    dc1 = 0.0;
+    dc2 = (percentage * 2.0);
   }
   else {
-    dc = (percentage - 0.5) * 2;
-
-    changeDutyCycle(dc, 0.0);
+    dc1 = ((percentage - 0.5) * 2.0);
+    dc2 = 1.0; //for some reason, putting this at 100 makes it go to 0
   }
-  Serial.print("voltage:");
-  Serial.println(dc);
 
-  // changeDutyCycle(float(adcResult / 1024));
-
-  // if (adcResult < 512) {
-  //   changeDutyCycle(0, (float)(adcResult / 1023));
-  // }
-  // else {
-  //   changeDutyCycle((float)(adcResult / 1023), 0 );
-
-  // }
-  // if (voltage >= 2.4 && voltage <= 2.6) { //the 2.5 range
-  //   // DDRB |= (1<<DDB7) | (1<<DDB6);
-  //   PORTB &= ~(1<<PORTB7);
-  //   PORTB &= ~(1<<PORTB6);
-  //   // Serial.print("in 2.5v range, actual v:");
-
-  // }
-  // else if (voltage < 2.4) {
-  //   PORTB &= ~(1<<PORTB6);
-  //   PORTB |= (1<<PORTB7);
-  //   dutycycle1 = 0;
-  //   dutycycle2 = (voltage / 5.0);
-
-    
-
-  //   // Serial.print("in less than 2.5, actualv:");
-  // }
-  // else {
-  //   PORTB |= (1<<PORTB6);
-  //   PORTB &= ~(1<<PORTB7);
-
-  //   dutycycle1 = (voltage / 5.0);
-  //   dutycycle2 =0;
-
-  //   // Serial.print("in more than 2.5, actualv:");
-  // }
-
-  
-  // Serial.print(voltage);
-
-
+  changeDutyCycle(dc1, dc2);
   return;
 }
