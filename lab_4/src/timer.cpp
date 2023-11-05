@@ -1,5 +1,15 @@
-
 #include "timer.h"
+// Author: 
+//  Alex Romero
+//  Victor Oviedo
+//  Mason Marrero
+//  Omar Ramos
+// Date: 11/7
+// Assignment: lab 4
+//
+// Description: make a second and miliisecond timer
+//----------------------------------------------------------------------//
+
 void initTimer1(){
 // intialize Timer1 for CTC mode of operation and interrupts
 // WGM10 = 0, WGM11 = 0, WGM12 = 1, WGM13 = 0 for CTC mode
@@ -9,9 +19,9 @@ void initTimer1(){
     TCCR1B &= ~(1 << WGM13);
     OCR1A = 15625; // set comparator value for CTC mode
 }
-/* This delays the program an amount of microseconds specified by unsigned int delay.
+/* This delays the program an amount of Seconds specified by unsigned int delay.
 */
-void delayUs(unsigned int delay){
+void delayS(unsigned int delay){
     unsigned int counter = 0;
     // turn on the clock by setting the prescaler bits to 8
     TCCR1B &= ~(1 << CS01);

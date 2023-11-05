@@ -1,7 +1,15 @@
 #include "pwm.h"
-
+// Author: 
+//  Alex Romero
+//  Victor Oviedo
+//  Mason Marrero
+//  Omar Ramos
+// Date: 11/7
+// Assignment: lab 4
+//
+// Description: get two PWM timers and function to analyze ADC
+//----------------------------------------------------------------------//
 #include <avr/io.h>
-#include <Arduino.h>
 
 
 // function that produces an output PWM signal with a variable frequency and duty cycle. For this example
@@ -12,7 +20,6 @@
 // modes 5, 6, and 7 Fast PWM).
 // I will have a prescaler of 1.  The calculation of ICR1 and OCR1A are shown below:
 void initPWMTimer3()  {
-  DDRB |= (1<<DDB7) | (1<<DDB6);
 
   //set header pin  to output
   DDRE |= (1 << DDE3);
@@ -24,14 +31,14 @@ void initPWMTimer3()  {
 
   //  Use fast PWM mode 10 bit, top value is determined by Table 17-2 of 0x3FF (1023) 
   //  which determines the PWM frequency.
-  // for Fast PWM 10bit mode # 7:
-  // WGM10 =1
-  // WGM11 =1
+  // for Fast PWM 10bit mode # 14:
+  // WGM10 = 0
+  // WGM11 = 1
   // WGM12 = 1
-  // WGM13 = 0
+  // WGM13 = 1
   TCCR3A &= ~(1 << WGM30); 
 
-  TCCR3A |=  (1 << WGM31);
+  TCCR3A |= (1 << WGM31);
 
   TCCR3B |= (1 << WGM32);
   TCCR3B |= (1 << WGM33);
@@ -43,29 +50,29 @@ void initPWMTimer3()  {
   // TOP value = 0x3FF = 1023 
   // PWM frequency from calculation = 15.625 kHz
 
-ICR3 = 1023;
+  ICR3 = 1023;
 
-// set prescalar CSBits to prescaler of 1
-//CS10 =1
-//CS11 =0
-//CS12 =0
-TCCR3B |= (1 << CS31);
-TCCR3B &= ~((1 << CS30)  | (1 << CS32));
+  // set prescalar CSBits to prescaler of 1
+  //CS10 =1
+  //CS11 =0
+  //CS12 =0
+  TCCR3B |= (1 << CS31);
+  TCCR3B &= ~((1 << CS30)  | (1 << CS32));
 
 
-// the last thing is to set the duty cycle.     
-// duty cycle is set by dividing output compare OCR1A value by 1 + TOP value
-// the top value is (1 + ICR1) = 1024
-//  calculate OCR1A value => OCR1A = duty cycle(fractional number) * (1 + TOP) 
-// we want a duty cycle = 60%
-// OCR1A = 0.60 * 1024
- OCR3A =  512;
+  // the last thing is to set the duty cycle.     
+  // duty cycle is set by dividing output compare OCR1A value by 1 + TOP value
+  // the top value is (1 + ICR1) = 1024
+  //  calculate OCR1A value => OCR1A = duty cycle(fractional number) * (1 + TOP) 
+  // we want a duty cycle = 60%
+  // OCR1A = 0.60 * 1024
+  OCR3A =  0;
 }
 
 void initPWMTimer4()  {
 
   //set header pin 6 to output
-  DDRG |= (1 << DDG5);
+  DDRH |= (1 << DDH3);
   // set non-inverting mode - output starts high and then is low, 
   //COM1A0 bit = 1
   //COM1A1 bit = 1
@@ -75,14 +82,14 @@ void initPWMTimer4()  {
 
   //  Use  PWM mode 10 bit, top value is determined by ICR1 value, 
   //  which determines the PWM frequency.
-  // for mode 10:
-  // WGM30 =1
-  // WGM31 =1
-  // WGM32 = 1
-  // WGM33 = 0
-  TCCR4A &=  (1 << WGM40);
-  TCCR4A |=  (1 << WGM41); 
-  TCCR4B |=  (1 << WGM42);
+  // for mode 14:
+  // WGM40 = 0
+  // WGM41 = 1
+  // WGM42 = 1
+  // WGM43 = 1
+  TCCR4A &= ~(1 << WGM40);
+  TCCR4A |= (1 << WGM41); 
+  TCCR4B |= (1 << WGM42);
   TCCR4B |= (1 << WGM43); 
 
   ICR4 = 1023;
@@ -96,52 +103,36 @@ void initPWMTimer4()  {
   TCCR4B |= (1 << CS41);
   TCCR4B &= ~((1 << CS40)  | (1 << CS42));
 
-  OCR4A = 512;
+  OCR4A = 1023;
 
 }
 
-void changeDutyCycle(float dutycycle1, float dutycycle2){
+void changeDutyCycle(double dutycycle1, double dutycycle2){
   OCR3A = int(dutycycle1 * (1024));
 
-  OCR4A = int((dutycycle2) * (1024));
+  OCR4A = int(dutycycle2 * (1024));
 }
 
-void analyzeADC(float voltage) {
-  float dutycycle1, dutycycle2;
+void analyzeADC() {
 
-
-
-  if (voltage >= 2.4 && voltage <= 2.6) { //the 2.5 range
-    // DDRB |= (1<<DDB7) | (1<<DDB6);
-    PORTB &= ~(1<<PORTB7);
-    PORTB &= ~(1<<PORTB6);
-    // Serial.print("in 2.5v range, actual v:");
-
+  while(! ((1 << 4) & ADCSRA)) {//waiting for ADC to be ready
   }
-  else if (voltage < 2.4) {
-    PORTB &= ~(1<<PORTB6);
-    PORTB |= (1<<PORTB7);
-    dutycycle1 = 0;
-    dutycycle2 = (voltage / 5.0);
 
-    
+  unsigned int adcResult = ADCL; //getting adc result p1
+  adcResult += ((unsigned int) ADCH) << 8;  //getting adc result p2
 
-    // Serial.print("in less than 2.5, actualv:");
+  double percentage = adcResult / 1024.0; //getting the adc percentage
+  double dc1, dc2;
+
+  if (percentage < 0.5) {
+    dc1 = 0.0;
+    dc2 = (percentage * 2.0);
   }
   else {
-    PORTB |= (1<<PORTB6);
-    PORTB &= ~(1<<PORTB7);
-
-    dutycycle1 = (voltage / 5.0);
-    dutycycle2 =0;
-
-    // Serial.print("in more than 2.5, actualv:");
+    dc1 = ((percentage - 0.5) * 2.0);
+    dc2 = 1.0; //for some reason, putting this at 100 makes it go to 0
   }
 
-  
-  // Serial.print(voltage);
-  changeDutyCycle(dutycycle1, dutycycle2);
-
-
+  changeDutyCycle(dc1, dc2);
   return;
 }

@@ -1,21 +1,18 @@
-
-#include <avr/io.h>
-
 #include "adc.h"
-
-//Pin A0 (Development 22)
-// Author: Dale Hetherington
-// Net ID:
-// Date:
-// Assignment:
+// Pin A0 (Development 22)
+// Author: 
+//  Alex Romero
+//  Victor Oviedo
+//  Mason Marrero
+//  Omar Ramos
+// Date: 11/7
+// Assignment: lab 4
 //
-// Description:  Use ADC7 for reading in analog voltage value
+// Description:  Use ADC0 for reading in analog voltage value
 //----------------------------------------------------------------------//
-
-#include "adc.h"
 #include <avr/io.h>
 
-void initADC7(){
+void initADC0(){
   // set reference voltage set to AVCC = 5V output.  (we really want to measure 5V output from the 
   // development board to determine what the reference value is for precise calculations)
   ADMUX |= (1 << REFS0);
