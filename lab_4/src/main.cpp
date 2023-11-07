@@ -71,7 +71,7 @@ int main(){
 
         delayMs(DEBOUNCE_TIME); //wait for button to be released 1ms before changing state
 
-        changeDutyCycle(0, 1);
+        changeDutyCycle(0, 1);//turn off motor
 
         for (int i = 9; i > -1; i--) {
           WriteToDisplay(i);
