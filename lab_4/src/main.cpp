@@ -45,7 +45,6 @@ int main(){
   initTimer0(); //milliseconds
   initTimer1(); //seconds
 
-  initPWMTimer3(); //pwm 1
   initPWMTimer4(); //pwm 2
 
   initADC0();
