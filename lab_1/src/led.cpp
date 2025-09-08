@@ -125,6 +125,7 @@ void runLED(unsigned int led){
     10->5   9->6
     */
     int match = (-2 * led) + 15 + led;
+    //same as match = 15 - led;
 
     Serial.println("Turning on LEDS: " + String(led) + " and " + String(match));
     turnOnLED(led);
