@@ -29,42 +29,41 @@ void initLED() {
 
 // turnOnLED which returns void and takes in an unsigned int parameter called led
 void turnOnLED(unsigned int led){
-    switch (led)
-    {
-    case 4:  // header pin 4
-        PORTG |= ( 1 << PORTG5);
-        break;
+    switch (led)  {
+        case 4:  // header pin 4
+            PORTG |= ( 1 << PORTG5);
+            break;
 
-    case 5:  // header pin 5
-        PORTE |= (1 << PORTE3);
-        break;
+        case 5:  // header pin 5
+            PORTE |= (1 << PORTE3);
+            break;
 
-    case 6:  // header piin 6
-        PORTH |= (1 << PORTH3);
-        break;
-    
-    case 7:  // header piin 7
-        PORTH |= (1 << PORTH4);
-        break;
+        case 6:  // header piin 6
+            PORTH |= (1 << PORTH3);
+            break;
+        
+        case 7:  // header piin 7
+            PORTH |= (1 << PORTH4);
+            break;
 
-    case 8:  // header piin 8
-        PORTH |= (1 << PORTH5);
-        break;
+        case 8:  // header piin 8
+            PORTH |= (1 << PORTH5);
+            break;
 
-    case 9:  // header piin 9
-        PORTH |= (1 << PORTH6);
-        break;
+        case 9:  // header piin 9
+            PORTH |= (1 << PORTH6);
+            break;
 
-    case 10:  // header piin 10
-        PORTB |= (1 << PORTB4);
-        break;
+        case 10:  // header piin 10
+            PORTB |= (1 << PORTB4);
+            break;
 
-    case 11:  // header piin 11
-        PORTB |= (1 << PORTB5);
-        break;
+        case 11:  // header piin 11
+            PORTB |= (1 << PORTB5);
+            break;
 
-    default:
-        break;
+        default:
+            break;
     }
 }
 
@@ -130,6 +129,7 @@ void runLED(unsigned int led){
     Serial.println("Turning on LEDS: " + String(led) + " and " + String(match));
     turnOnLED(led);
     turnOnLED(match);
+    
 
     if (led != 4) {
         //turn off previous  set of leds

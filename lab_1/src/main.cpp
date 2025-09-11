@@ -33,7 +33,7 @@ int main(){
       Serial.println("On i:" + String(i));
       runLED(i);
 
-      if(PINA & (1 << PINA0)){ // logic 1 true – turn off LED
+      if (PINA & (1 << PINA0)){ // logic 1 true – turn off LED
         Serial.println("Push button ON");
         _delay_ms(LONG_DELAY);
         
