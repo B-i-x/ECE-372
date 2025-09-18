@@ -19,6 +19,29 @@ void initTimer0(){
 
 // This function passes an int value called delay 
 //that will be used to specify how many milliseconds in the delay
+/**
+ * @brief Generates a delay in milliseconds using Timer0 on an AVR microcontroller.
+ * 
+ * This function configures Timer0 to generate a delay of the specified number of milliseconds.
+ * It uses the Output Compare Match feature of Timer0 to achieve precise timing.
+ * 
+ * The Output Compare Register (OCR0A) value is calculated using the formula:
+ * 
+ *     OCR0A = (Td * Fclk) / Prescaler - 1
+ * 
+ * Where:
+ * - Td = Desired delay time (1 ms in this case)
+ * - Fclk = Clock frequency (16 MHz for the microcontroller)
+ * - Prescaler = Timer prescaler value (64 in this case)
+ * 
+ * Substituting the values:
+ * 
+ *     OCR0A = (1e-3 * 16e6) / 64 - 1
+ *     OCR0A = 250 - 1
+ *     OCR0A = 249
+ * 
+ * @param delay The number of milliseconds to delay.
+ */
 void delayMs(int delay){
 
     int count = 0;
