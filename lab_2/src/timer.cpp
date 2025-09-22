@@ -61,14 +61,14 @@ void delayMs(int delay){
     // go into the millisecond loop and loop until count = delay
     // after this while loop the delay time = delay * 1ms
     while (count < delay){
-    // CLEAR THE OCF0A FLAG ()
-    // CLEAR THE OCF0A flag by writing a 1 bit
-    TIFR0 |= (1 << OCF0A);
+        // CLEAR THE OCF0A FLAG ()
+        // CLEAR THE OCF0A flag by writing a 1 bit
+        TIFR0 |= (1 << OCF0A);
 
-    TCNT0 = 0;
-    // CLEAR THE COUNTER TO RESTART COUNTING UP TO 249
-    // WHILE THE FLAG OCF0A IS NOT RAISED DO NOTHING
-    while ( ! (TIFR0 & ( 1 << OCF0A)));
+        TCNT0 = 0;
+        // CLEAR THE COUNTER TO RESTART COUNTING UP TO 249
+        // WHILE THE FLAG OCF0A IS NOT RAISED DO NOTHING
+        while ( ! (TIFR0 & ( 1 << OCF0A)));
 
         count++;
     }

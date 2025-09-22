@@ -11,7 +11,10 @@
 // Date: 9-28-2023  
  * Initializes pull-up resistor on PB3 and sets it into input mode
  */
+
+
 void initSwitchPB3(){
+
     //set the data direction register to input
 
   DDRB &= ~(1<<DDB3); // set direction for input
