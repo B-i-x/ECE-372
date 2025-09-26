@@ -42,6 +42,7 @@ int main(){
 
   //initialize LEDS
   initLED();  // set direction of LED pins
+  
   //initialize switch
   initSwitchPB3(); // set the switch for input and for pin change interrupts
 

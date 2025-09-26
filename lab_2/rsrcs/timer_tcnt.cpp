@@ -26,6 +26,9 @@ void delayMs(int delay) {
     TCCR0B |=  (1 << CS00) | (1 << CS01);
     TCCR0B &= ~(1 << CS02);
 
+    unsigned int flagStatus = (TIFR0 & (1 << TOV0)) != 0;
+    Serial.print("Overflow flag is: ");
+    Serial.println(flagStatus);
     for (int i = 0; i < delay; i++) {
         // Clear any pending overflow flag by writing a 1
         TIFR0 |= (1 << TOV0);
