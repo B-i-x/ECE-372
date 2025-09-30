@@ -124,7 +124,7 @@ ISR(TIMER0_COMPA_vect) {
  */
 ISR(PCINT0_vect) {
   // Read current PB3 level (pull-up: pressed=0, released=1)
-  const uint8_t pin = (PINB >> PB3) & 0x01;
+  // const uint8_t pin = (PINB >> PB3) & 0x01;
 
   if (pbstate == wait_press) {
     // Any edge here is treated as start of a press; start debounce window
