@@ -12,11 +12,17 @@
  */
 void initLCDPins(){
   
+  // Set A port pins for LCD data lines
   DDRA |= (1<<DDA0) | (1<<DDA1) | (1<<DDA2) | (1<<DDA3);
+  // PORTA0 -> Header pin 22 -> LCD D4
+  // PORTA1 -> Header pin 23 -> LCD D5
+  // PORTA2 -> Header pin 24 -> LCD D6
+  // PORTA3 -> Header pin 25 -> LCD D7
 
+  // Set B port pins for LCD control lines
   DDRB |= (1<<DDB4) | (1<<DDB6);
-  //port b4 is header pin 10 and that is enable pin
-  //port b6 is header pin 12 and that is RS pin
+  // PORTB4 -> Header pin 10 -> LCD Enable (E)
+  // PORTB6 -> Header pin 12 -> LCD Register Select (RS)
 
 }
 
@@ -61,7 +67,7 @@ void fourBitCommandWithDelay(unsigned char data, unsigned int delay){
 void eightBitCommandWithDelay(unsigned char command, unsigned int delay){
 
   PORTA = (command >> 4) & 0x0F; //top most bits of command
-
+  
   PORTB &= ~(1 << PORTB6); //setting rs low
 
   PORTB |= (1 << PORTB4); //setting enable pin high
@@ -92,7 +98,7 @@ void eightBitCommandWithDelay(unsigned char command, unsigned int delay){
  */
 void writeCharacter(unsigned char character){
   PORTA = (character >> 4) & 0x0F; //top most bits of command
-
+  // PORTA = character & 0xF0;
   PORTB |= (1 << PORTB6); //setting rs high
 
   PORTB |= (1 << PORTB4); //setting enable pin high

@@ -28,7 +28,7 @@ void delayUs(unsigned int delay){
     // we used the formula OCR0A = [Td * fclk]/ PS
     // using a PS = 8, Td = 1us fclk = 16MHz.
     // OCR1A = 2  - 1 to acccount for starting at bit 0.
-    OCR1A = 2;
+    OCR1A = 1;
 
     // turn on clock with the CS bits and start counting
     // Use Prescaleer of 0 (16 counts is 1 us)

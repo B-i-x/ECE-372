@@ -98,6 +98,10 @@ int main(){
     // Serial.flush();
 
     led_count++;
+
+    if (led_count > 16) {
+      led_count = 0;
+    }
   }
 
   return 0;
