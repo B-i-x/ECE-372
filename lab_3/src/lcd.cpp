@@ -171,19 +171,25 @@ void initLCDProcedure(){
   PORTA = (PORTA & 0xF0) | (2 & 0x0F);
   delayUs(100);
   // Function set in the command table with 53us delay
+  // Function set in the command table with 53us delay
+  // 0b00101000
   eightBitCommandWithDelay((unsigned char)(0x28), 53);
 
   // Display off in the command table with 53us delay
+  // 0b00001000
   eightBitCommandWithDelay((unsigned char)(0x08), 53);
 
   // Clear display in the command table. Remember the delay is longer!!!
+  // 0b00000001
   eightBitCommandWithDelay((unsigned char)(0x01), 3000);
 
   // Entry Mode Set in the command table.
+  // 0b00000110
   eightBitCommandWithDelay((unsigned char)(0x06), 3000);
 
   // Display ON/OFF Control in the command table. (Yes, this is not specified),
   // in the data sheet, but you have to do it to get this to work. Yay datasheets!)
+  // 0b00001100
   eightBitCommandWithDelay((unsigned char)(0x0C), 3000);
 
 }

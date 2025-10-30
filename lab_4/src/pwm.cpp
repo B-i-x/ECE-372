@@ -9,7 +9,6 @@
 //
 // Description: get two PWM timers and function to analyze ADC
 //----------------------------------------------------------------------//
-#include <avr/io.h>
 
 
 // function that produces an output PWM signal with a variable frequency and duty cycle. For this example
@@ -19,120 +18,104 @@
 // gives me more flexibility in setting the PWM frequency (compared to a fixed TOP value in
 // modes 5, 6, and 7 Fast PWM).
 // I will have a prescaler of 1.  The calculation of ICR1 and OCR1A are shown below:
-void initPWMTimer3()  {
+// pwm.cpp
+#include <avr/io.h>
 
-  //set header pin  to output
-  DDRE |= (1 << DDE3);
-  // set non-inverting mode - output starts high and then is low, 
-  //COM1A0 bit = 0
-  //COM1A1 bit =1
+#define PWM_TOP 1023
+
+static inline uint16_t clamp_to_top(float x){
+  if (x < 0.0f) x = 0.0f;
+  if (x > 1.0f) x = 1.0f;
+  // scale to 0..1023 with rounding
+  return (uint16_t)(x * PWM_TOP + 0.5f);
+}
+
+void initPWMTimer3(void){
+  // OC3A = PE3, OC3B = PE4 on ATmega2560
+  DDRE |= (1 << DDE3) | (1 << DDE4);
+
+  // Reset control regs
+  TCCR3A = 0;
+  TCCR3B = 0;
+
+  // Fast PWM mode 14: TOP = ICR3
+  // WGM33:WGM30 = 1110b
+  TCCR3A |= (1 << WGM31);
+  TCCR3B |= (1 << WGM32) | (1 << WGM33);
+
+  // Non-inverting on OC3A and OC3B
   TCCR3A |= (1 << COM3A1);
   TCCR3A &= ~(1 << COM3A0);
 
-  //  Use fast PWM mode 10 bit, top value is determined by Table 17-2 of 0x3FF (1023) 
-  //  which determines the PWM frequency.
-  // for Fast PWM 10bit mode # 14:
-  // WGM10 = 0
-  // WGM11 = 1
-  // WGM12 = 1
-  // WGM13 = 1
-  TCCR3A &= ~(1 << WGM30); 
+  TCCR3A |= (1 << COM3B1);
+  TCCR3A &= ~(1 << COM3B0);
 
-  TCCR3A |= (1 << WGM31);
+  ICR3  = PWM_TOP;
+  OCR3A = 0;
+  OCR3B = 0;
 
-  TCCR3B |= (1 << WGM32);
-  TCCR3B |= (1 << WGM33);
-
-  // PWM frequency calculation for FAST PWM mode on page 148 of datasheet
-  //frequency of PWM = (F_clk)/((Prescaler)* (1 +TOP))
-  // frequency of PWM = 16Mhz
   // Prescaler = 1
-  // TOP value = 0x3FF = 1023 
-  // PWM frequency from calculation = 15.625 kHz
-
-  ICR3 = 1023;
-
-  // set prescalar CSBits to prescaler of 1
-  //CS10 =1
-  //CS11 =0
-  //CS12 =0
-  TCCR3B |= (1 << CS31);
-  TCCR3B &= ~((1 << CS30)  | (1 << CS32));
-
-
-  // the last thing is to set the duty cycle.     
-  // duty cycle is set by dividing output compare OCR1A value by 1 + TOP value
-  // the top value is (1 + ICR1) = 1024
-  //  calculate OCR1A value => OCR1A = duty cycle(fractional number) * (1 + TOP) 
-  // we want a duty cycle = 60%
-  // OCR1A = 0.60 * 1024
-  OCR3A =  0;
+  TCCR3B |= (1 << CS30);
 }
 
-void initPWMTimer4()  {
-
-  //set header pin 6 to output
-  DDRH |= (1 << DDH3);
-  // set non-inverting mode - output starts high and then is low, 
-  //COM1A0 bit = 1
-  //COM1A1 bit = 1
-  TCCR4A |= (1 << COM4A0);
-  TCCR4A |= (1 << COM4A1);
-    
-
-  //  Use  PWM mode 10 bit, top value is determined by ICR1 value, 
-  //  which determines the PWM frequency.
-  // for mode 14:
-  // WGM40 = 0
-  // WGM41 = 1
-  // WGM42 = 1
-  // WGM43 = 1
-  TCCR4A &= ~(1 << WGM40);
-  TCCR4A |= (1 << WGM41); 
-  TCCR4B |= (1 << WGM42);
-  TCCR4B |= (1 << WGM43); 
-
-  ICR4 = 1023;
-
-
-
-  // set prescalar CSBits to prescaler of 1
-  //CS30 =1
-  //CS31 =0
-  //CS32 =0
-  TCCR4B |= (1 << CS41);
-  TCCR4B &= ~((1 << CS40)  | (1 << CS42));
-
-  OCR4A = 1023;
-
+void changeDutyCycle(float dutyA, float dutyB){
+  OCR3A = clamp_to_top(dutyA);
+  OCR3B = clamp_to_top(dutyB);
 }
 
-void changeDutyCycle(double dutycycle1, double dutycycle2){
-  OCR3A = int(dutycycle1 * (1024));
+// Motor helpers, assuming OC3A drives one side and OC3B the other.
+// Only PWM one leg at a time for direction control.
+void motorSet(float speed, int dir){
+  if (speed < 0) speed = 0;
+  if (speed > 1) speed = 1;
 
-  OCR4A = int(dutycycle2 * (1024));
+  if (dir >= 0){
+    // Forward: A PWM, B low
+    OCR3A = clamp_to_top(speed);
+    OCR3B = 0;
+  } else {
+    // Reverse: B PWM, A low
+    OCR3A = 0;
+    OCR3B = clamp_to_top(speed);
+  }
 }
 
-void analyzeADC() {
+// Active braking: both legs to the same rail
+void motorBrakeLow(void){    // brake to GND
+  OCR3A = 0;
+  OCR3B = 0;
+}
 
-  while(! ((1 << 4) & ADCSRA)) {//waiting for ADC to be ready
+void motorBrakeHigh(void){   // brake to VCC
+  OCR3A = PWM_TOP;
+  OCR3B = PWM_TOP;
+}
+
+// If your driver has an EN pin, pulling EN low is the true "coast"
+
+
+void analyzeADC(void) {
+  // start conversion
+  ADCSRA |= (1 << ADSC);
+  // wait for complete
+  while ((ADCSRA & (1 << ADIF)) == 0) {}
+  // read result (L then H)
+  uint16_t adc = ADCL;
+  adc |= ((uint16_t)ADCH) << 8;
+  // clear ADIF by writing 1
+  ADCSRA |= (1 << ADIF);
+
+  float pct = adc / 1023.0f;
+
+  float dc1, dc2;
+  if (adc < 512) {
+    // direction A: PWM OC3A, keep OC4A low
+    dc1 = (pct * 2.0f);   // 0..~1
+    dc2 = 0.0f;
+  } else {
+    // direction B: PWM OC4A, keep OC3A low
+    dc1 = 0.0f;
+    dc2 = ((pct - 0.5f) * 2.0f);  // 0..~1
   }
-
-  unsigned int adcResult = ADCL; //getting adc result p1
-  adcResult += ((unsigned int) ADCH) << 8;  //getting adc result p2
-
-  double percentage = adcResult / 1024.0; //getting the adc percentage
-  double dc1, dc2;
-
-  if (percentage < 0.5) {
-    dc1 = 0.0;
-    dc2 = (percentage * 2.0);
-  }
-  else {
-    dc1 = ((percentage - 0.5) * 2.0);
-    dc2 = 1.0; //for some reason, putting this at 100 makes it go to 0
-  }
-
   changeDutyCycle(dc1, dc2);
-  return;
 }

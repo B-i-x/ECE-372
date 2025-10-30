@@ -45,7 +45,7 @@ int main(){
   initTimer0(); //milliseconds
   initTimer1(); //seconds
 
-  initPWMTimer4(); //pwm 2
+  initPWMTimer3(); //pwm 2
 
   initADC0();
 
@@ -70,7 +70,7 @@ int main(){
 
         delayMs(DEBOUNCE_TIME); //wait for button to be released 1ms before changing state
 
-        changeDutyCycle(0, 1);//turn off motor
+        changeDutyCycle(0.0, 1.0);//turn off motor
 
         for (int i = 9; i > -1; i--) {
           WriteToDisplay(i);
