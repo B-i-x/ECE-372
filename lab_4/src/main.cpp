@@ -73,8 +73,8 @@ int main(){
         changeDutyCycle(0.0, 1.0);//turn off motor
 
         for (int i = 9; i > -1; i--) {
-          WriteToDisplay(i);
-          delayS(1);
+          WriteToDisplay(i); //writing to screen
+          delayS(1); //1 second delay
         }
         
         WriteToDisplay(-1); //clear the display
