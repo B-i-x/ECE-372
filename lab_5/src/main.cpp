@@ -17,7 +17,6 @@ typedef enum {
 } device_state;
 //declare the enum state variable
 volatile device_state state_var = wait_for_movement;
-int godothing = 0;
 
 int main() {
   sei(); 
@@ -35,40 +34,39 @@ int main() {
   write_happy_face();  
   delayMs(10);  // delay for 1 s to display "HI"
   
-  int i = 1000;
 
   initPWMTimer3();
 
   while (1) {
 
-    delayMs(100);
 
     mpu6050_data mpu_data = read_mpu6050_data(true);
+    bool is_flat = is_sensor_laying_down(mpu_data);
+    if(!is_flat){
+      Serial.println("Sensor Moved!");
+      write_sad_face();
+    }
+    else {
+      write_happy_face();
+    }
 
     switch (state_var) {
       
       case wait_for_movement:       
-        if(!is_sensor_laying_down(mpu_data)){
-          Serial.println("Sensor Moved!");
-          write_sad_face();
+        if(!is_flat){
           state_var = buzz; 
         }
         break;
 
       case buzz:
         Serial.println("Buzzing");
-        changer(i);
-        i = i+1000;
-        if(i > 4000){
-          i = 1000;
-        }
+        buzz_speaker();
 
         break;
 
       case (turn_off_buzzer):
         Serial.println("Turning off buzzer");
         turnOff();
-        write_happy_face();
         state_var = wait_for_movement;
         break;
     }
@@ -79,7 +77,6 @@ int main() {
 //Interrupt state machine
 ISR(PCINT1_vect){
   //if pressed go to debounce state
-  Serial.println("Button Pressed");
   if(state_var == buzz){
     state_var = turn_off_buzzer;
     Serial.println("Button Pressed");

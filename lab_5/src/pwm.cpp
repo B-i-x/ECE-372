@@ -72,3 +72,13 @@ void turnOff(){
   TCCR3B &= ~((1 << CS30)  | (1 << CS32));
 }
 
+void buzz_speaker() {
+  for (int i = 1000; i <= 4000; i += 1000) {
+    TCCR3B |= (1 << CS31);
+    TCCR3B &= ~((1 << CS30)  | (1 << CS32));
+    OCR3A = 1600000 / i;
+    OCR3B = OCR3A * .5;
+    delayMs(100);
+  }
+}
+
