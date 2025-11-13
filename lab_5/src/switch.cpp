@@ -18,25 +18,13 @@
  * Trigger: falling edge (high-to-low when the button is pressed if wired to GND)
  */
 
-void initSwitchPD2(void) {
-    cli();
+void initSwitchJ1(void) {
+    // D3 (PD3 / INT1) input with pull-up
+    DDRJ  &= ~(1 << DDJ1);
+    PORTJ |=  (1 << PORTJ1);
 
-    // D3 (PD3) input with pull-up
-    DDRD  &= ~(1 << DDD2);
-    PORTD |=  (1 << PORTD2);
-
-    // Falling edge on INT1
-    EICRA &= ~((1 << ISC01) | (1 << ISC00));
-    EICRA |=  (1 << ISC01);        // ISC01=1, ISC00=0 -> falling edge
-
-    EIFR  = (1 << INTF0);          // clear pending INT0
-    EIMSK |= (1 << INT0);          // enable INT0
-
-    // Make sure pin-change interrupts are off if you were using them
-    PCMSK0 = 0;
-    PCMSK1 = 0;
-    PCMSK2 = 0;
-
-    sei();
+    PCICR |= (1 << PCIE1);    // Enable Pin Change Interrupts for PCINT7:0
+    PCMSK1 |= (1 << PCINT10);  // Enable PCINT3 (PD3)
 }
+
 

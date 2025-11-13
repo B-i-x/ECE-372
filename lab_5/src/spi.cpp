@@ -13,7 +13,7 @@
 #define wait_for_complete while(!(SPSR & (1 << SPIF)));
 
 
-void SPI_MASTER_Init() {
+void spi_init() {
     // set MOSI,SCK,and SS direction to outputs
     DDR_SPI = (1 << DD_MOSI)| (1 << DD_SCK) | (1 << DD_SS);
 
@@ -25,8 +25,7 @@ void SPI_MASTER_Init() {
     // enable SPI, master mode, CPOL, CPHA, default clock and fosc/128
     // datasheet says sample on rising edge CPOL = 1 CPHA =1
     SPCR  |= (1 <<SPE)| (1 << MSTR) | (1 << CPOL) | (1 << CPHA ) | (1 << SPR1) | (1 << SPR0);
-
-    }
+}
 
 void write_execute(unsigned char CMD, unsigned char data) {
     SPI_PORT &= ~(1 << SPI_SS_BIT);  // enable chip select bit to begin SPI frame
@@ -58,4 +57,11 @@ void write_sad_face() {
     write_execute(0x06, 0b00111100);
     write_execute(0x07, 0b01000010);
     write_execute(0x08, 0b00000000);
+}
+
+void screen_init() {
+    write_execute(0x0A, 0x03);  // brightness control
+    write_execute(0x0B, 0x07); // scanning all rows and columns
+    write_execute(0x0C, 0x01); // set shutdown register to normal operation (0x01)
+    write_execute(0x0F, 0x00); // display test register - set to normal operation (0x01)
 }

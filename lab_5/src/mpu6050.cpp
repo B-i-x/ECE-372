@@ -65,13 +65,13 @@ mpu6050_data read_mpu6050_data(bool debug = false) {
 bool is_sensor_laying_down(mpu6050_data data) {
     // Check if the sensor is laying flat based on accelerometer data
     const int x_accel_setpoint = 1300; // Define a threshold for "flat" position
-    const int x_tolerance = 500;
+    const int x_tolerance = 1000;
 
     const int y_accel_setpoint = 0;
-    const int y_tolerance = 500;
+    const int y_tolerance = 1000;
 
     const int z_accel_setpoint = 16000; // Assuming 1g = 16000 in raw data
-    const int z_tolerance = 3000;
+    const int z_tolerance = 5000;
 
     bool x_flat = (data.accel_x >= (x_accel_setpoint - x_tolerance)) && (data.accel_x <= (x_accel_setpoint + x_tolerance));
     // Serial.print("X flat: ");
