@@ -88,9 +88,9 @@ bool is_sensor_laying_down(mpu6050_data data) {
     bool y_flat = (data.accel_y >= (y_accel_setpoint - y_tolerance)) && (data.accel_y <= (y_accel_setpoint + y_tolerance));
     // Serial.print("  Y flat: ");
     // Serial.print(y_flat);
-    bool z_flat = (data.accel_z >= (z_accel_setpoint - z_tolerance)) && (data.accel_z <= (z_accel_setpoint + z_tolerance));
+    // bool z_flat = (data.accel_z >= (z_accel_setpoint - z_tolerance)) && (data.accel_z <= (z_accel_setpoint + z_tolerance));
     // Serial.print("  Z flat: ");
     // Serial.println(z_flat);
 
-    return x_flat && y_flat && z_flat;
+    return x_flat && y_flat;
 }
