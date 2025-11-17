@@ -17,6 +17,13 @@
 #define SL_TEMP_HIGH      0x41
 #define SL_TEMP_LOW       0x42
 
+#define SL_GYRO_XAX_HIGH  0x43
+#define SL_GYRO_XAX_LOW   0x44
+#define SL_GYRO_YAX_HIGH  0x45
+#define SL_GYRO_YAX_LOW   0x46
+#define SL_GYRO_ZAX_HIGH  0x47
+#define SL_GYRO_ZAX_LOW   0x48
+
 mpu6050_data mpu_data;
 
 void wake_mpu6050() {
@@ -28,25 +35,25 @@ void wake_mpu6050() {
   StopI2C_Trans();
 }
 
+
+int mpu_read_word(char high_reg, char low_reg) {
+    int val;
+
+    Read_from(SLA, high_reg);
+    val = Read_data();          // high byte
+
+    Read_from(SLA, low_reg);
+    val = (val << 8) | Read_data();   // combine with low byte
+
+    return val;
+}
+
 mpu6050_data read_mpu6050_data(bool debug = false) {
-    int T_val;
-    Read_from(SLA,SL_MEMA_XAX_HIGH); 
-    // status = TWSR & 0xF8;
-    T_val= Read_data(); // read upper value
-    Read_from(SLA,SL_MEMA_XAX_LOW);
-    T_val = (T_val << 8)| Read_data(); // append lower value
-    mpu_data.accel_x = T_val;
-    Read_from(SLA,SL_MEMA_YAX_HIGH);
-    T_val= Read_data(); // read upper value
-    Read_from(SLA,SL_MEMA_YAX_LOW);
-    T_val = (T_val << 8 )| Read_data(); // append lower value
-    mpu_data.accel_y = T_val;
-    Read_from(SLA,SL_MEMA_ZAX_HIGH); 
-    // status = TWSR & 0xF8;
-    T_val= Read_data(); // read upper value
-    Read_from(SLA,SL_MEMA_ZAX_LOW);
-    T_val = (T_val << 8)| Read_data(); // append lower value
-    mpu_data.accel_z = T_val;
+    mpu_data.accel_x = mpu_read_word(SL_GYRO_XAX_HIGH, SL_GYRO_XAX_LOW);
+    mpu_data.accel_y = mpu_read_word(SL_GYRO_YAX_HIGH, SL_GYRO_YAX_LOW);
+    mpu_data.accel_z = mpu_read_word(SL_GYRO_ZAX_HIGH, SL_GYRO_ZAX_LOW);
+
+    StopI2C_Trans();
     StopI2C_Trans();
 
     if (debug) {
@@ -62,16 +69,18 @@ mpu6050_data read_mpu6050_data(bool debug = false) {
     return mpu_data;
 }
 
+
+
 bool is_sensor_laying_down(mpu6050_data data) {
     // Check if the sensor is laying flat based on accelerometer data
-    const int x_accel_setpoint = 1300; // Define a threshold for "flat" position
-    const int x_tolerance = 1000;
+    const int x_accel_setpoint = -300; // Define a threshold for "flat" position
+    const int x_tolerance = 100;
 
-    const int y_accel_setpoint = 0;
-    const int y_tolerance = 1000;
+    const int y_accel_setpoint = 140;
+    const int y_tolerance = 100;
 
-    const int z_accel_setpoint = 16000; // Assuming 1g = 16000 in raw data
-    const int z_tolerance = 5000;
+    const int z_accel_setpoint = 10; 
+    const int z_tolerance = 100;
 
     bool x_flat = (data.accel_x >= (x_accel_setpoint - x_tolerance)) && (data.accel_x <= (x_accel_setpoint + x_tolerance));
     // Serial.print("X flat: ");

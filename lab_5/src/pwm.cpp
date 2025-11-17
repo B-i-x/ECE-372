@@ -38,9 +38,7 @@ void initPWMTimer3()  {
   // WGM12 = 1
   // WGM13 = 1
   TCCR3A |= (1 << WGM30); 
-
   TCCR3A |= (1 << WGM31);
-
   TCCR3B |= (1 << WGM32);
   TCCR3B |= (1 << WGM33);
 
@@ -50,14 +48,6 @@ void initPWMTimer3()  {
   //CS12 =0
   TCCR3B |= (1 << CS31);
   TCCR3B &= ~((1 << CS30)  | (1 << CS32));
-
-
-  // the last thing is to set the duty cycle.     
-  // duty cycle is set by dividing output compare OCR1A value by 1 + TOP value
-  // the top value is (1 + ICR1) = 1024
-  //  calculate OCR1A value => OCR1A = duty cycle(fractional number) * (1 + TOP) 
-  // we want a duty cycle = 60%
-  // OCR1A = 0.60 * 1024
 }
 
 void changer(int i){

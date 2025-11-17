@@ -22,13 +22,16 @@ int main() {
   sei(); 
 
   Serial.begin(9600); // using serial port to print values from I2C bus
-  delayMs(100); // wait for serial to initialize
+  delayMs(10); // wait for serial to initialize
 
+  //i2c stuff
   initI2C(); // initialize I2C and set bit rate
   wake_mpu6050(); // wake up MPU6050 from sleep mode
 
+  //switch stuff
   initSwitchJ1(); 
 
+  //spi stuff
   spi_init(); // initialize SPI module and set the data rate
   screen_init(); // initialize 8 x 8 LED array (info from MAX7219 datasheet)
   write_happy_face();  
@@ -42,11 +45,11 @@ int main() {
 
     mpu6050_data mpu_data = read_mpu6050_data(true);
     bool is_flat = is_sensor_laying_down(mpu_data);
+
     if(!is_flat){
-      Serial.println("Sensor Moved!");
+      // Serial.println("Sensor Moved!");
       write_sad_face();
-    }
-    else {
+    } else {
       write_happy_face();
     }
 
