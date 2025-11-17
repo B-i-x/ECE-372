@@ -9,6 +9,8 @@
 #include "mpu6050.h"
 
 
+
+
 //create states
 typedef enum {
   wait_for_movement, 
@@ -39,6 +41,10 @@ int main() {
   
 
   initPWMTimer3();
+
+  #ifdef DEBUG
+    Serial.println("Initialization Complete");
+  #endif
 
   while (1) {
 
