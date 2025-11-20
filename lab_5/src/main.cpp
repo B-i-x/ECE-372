@@ -49,7 +49,7 @@ int main() {
   while (1) {
 
 
-    mpu6050_data mpu_data = read_mpu6050_data(true);
+    mpu6050_data mpu_data = read_mpu6050_data();
     bool is_flat = is_sensor_laying_down(mpu_data);
 
     if(!is_flat){
