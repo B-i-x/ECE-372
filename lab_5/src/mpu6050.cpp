@@ -32,11 +32,10 @@ mpu6050_data mpu_data;
 
 void wake_mpu6050() {
     StartI2C_Trans(SLA);
-  //status = TWSR & 0xF8;
-  write(PWR_MGMT);// address on SLA for Power Management
-  write(WAKEUP); // send data to Wake up from sleep mode
-
-  StopI2C_Trans();
+    //status = TWSR & 0xF8;
+    write(PWR_MGMT);// address on SLA for Power Management
+    write(WAKEUP); // send data to Wake up from sleep mode
+    StopI2C_Trans();
 }
 
 
