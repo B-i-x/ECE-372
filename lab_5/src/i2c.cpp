@@ -18,7 +18,7 @@ void initI2C() {
 }
 
  
-void StartI2C_Trans(unsigned char SLA) {
+void start_i2c_trans(unsigned char SLA) {
 // this function initiates a start condition and calls slave device with SLA
   TWCR = (1<<TWINT)|(1<<TWSTA)|(1<<TWEN); // clear TWINT, intiate a start condition and enable
   wait_for_completion;
@@ -27,7 +27,7 @@ void StartI2C_Trans(unsigned char SLA) {
   wait_for_completion;
 }
 
-void StopI2C_Trans() {
+void stop_i2c_trans() {
   // this function sends a stop condition to stop I2C transmission
 
   TWCR = (1<<TWINT)|(1<<TWEN)|(1<<TWSTO); //trigger action:  send stop condition
@@ -39,10 +39,11 @@ void write(unsigned char data){
   TWCR = (1<<TWINT)|(1<<TWEN);  // trigger action:  clear flag and enable TWI
   wait_for_completion;
 }
-void Read_from(unsigned char SLA, unsigned char MEMADDRESS){
+
+void read_from(unsigned char SLA, unsigned char MEMADDRESS){
   // this function sets up reading from SLA at the SLA MEMADDRESS 
 
-  StartI2C_Trans(SLA);
+  start_i2c_trans(SLA);
  
   write(MEMADDRESS);
   
@@ -54,10 +55,9 @@ void Read_from(unsigned char SLA, unsigned char MEMADDRESS){
   TWCR = (1<< TWINT) | (1 << TWEN);  // master can send a nack now
   wait_for_completion;
   TWCR = (1 << TWINT) | (1 << TWEN) | (1 << TWSTO); // Stop condition
-// after this function is executed the TWDR register has the data from SLA that Master wants to read
+  // after this function is executed the TWDR register has the data from SLA that Master wants to read
 }
   
-unsigned char Read_data() // Returns the last byte  from the data register
-{
+unsigned char read_data() {// Returns the last byte  from the data register
   return TWDR;
 }

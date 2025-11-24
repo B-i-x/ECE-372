@@ -31,22 +31,22 @@
 mpu6050_data mpu_data;
 
 void wake_mpu6050() {
-    StartI2C_Trans(SLA);
+    start_i2c_trans(SLA);
     //status = TWSR & 0xF8;
     write(PWR_MGMT);// address on SLA for Power Management
     write(WAKEUP); // send data to Wake up from sleep mode
-    StopI2C_Trans();
+    stop_i2c_trans();
 }
 
 
 int mpu_read_word(char high_reg, char low_reg) {
     int val;
 
-    Read_from(SLA, high_reg);
-    val = Read_data();          // high byte
+    read_from(SLA, high_reg);
+    val = read_data();          // high byte
 
-    Read_from(SLA, low_reg);
-    val = (val << 8) | Read_data();   // combine with low byte
+    read_from(SLA, low_reg);
+    val = (val << 8) | read_data();   // combine with low byte
 
     return val;
 }
@@ -57,7 +57,7 @@ mpu6050_data read_mpu6050_data() {
     mpu_data.accel_y = mpu_read_word(SL_MEMA_YAX_HIGH, SL_MEMA_YAX_LOW);
     mpu_data.accel_z = mpu_read_word(SL_MEMA_ZAX_HIGH, SL_MEMA_ZAX_LOW);
 
-    StopI2C_Trans();
+    stop_i2c_trans();
 
     return mpu_data;
 }
