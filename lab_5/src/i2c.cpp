@@ -14,7 +14,6 @@ void initI2C() {
   TWBR = 0xC6; // bit rate generator = 10k  (TWBR = 198)
 
   TWCR |= (1 << TWINT )| (1 << TWEN); // enable two wire interface
-
 }
 
  
@@ -29,10 +28,9 @@ void start_i2c_trans(unsigned char SLA) {
 
 void stop_i2c_trans() {
   // this function sends a stop condition to stop I2C transmission
-
   TWCR = (1<<TWINT)|(1<<TWEN)|(1<<TWSTO); //trigger action:  send stop condition
-
 }
+
 void write(unsigned char data){
   // this function loads the data passed into the I2C data register and transmits
   TWDR = data; //load data into TWDR register
